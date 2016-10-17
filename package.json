@@ -1,0 +1,44 @@
+{
+  "name": "demo-react-glider",
+  "version": "0.0.1",
+  "description": "react-glider",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack-dev-server --progress --colors --host localhost --port 3002 --inline --hot"
+  },
+  "keywords": [
+    "demo",
+    "react",
+    "respond",
+    "layout",
+    "slider",
+    "webpack",
+    "javascript",
+    "jsx",
+    "babel",
+    "glider"
+  ],
+  "author": {
+    "name": "felixzxk",
+    "mail": "felixzxk@gmail.com"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.17.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "html-webpack-plugin": "^2.22.0",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.16.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/felixzxk/react-glider"
+  }
+}
