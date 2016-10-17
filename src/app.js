@@ -5,7 +5,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 //import ReactGlider from 'react-glider'
-import ReactGlider from './react-glider';
+import ReactGlider from '../react-glider';
 const Item = ReactGlider.Item;
 class MainApp extends React.Component {
     constructor(props) {
