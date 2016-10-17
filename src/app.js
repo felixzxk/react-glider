@@ -5,7 +5,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 //import ReactGlider from 'react-glider'
-import {ReactGlider} from './react-glider';
+import ReactGlider from './react-glider';
+const Item = ReactGlider.Item;
 class MainApp extends React.Component {
     constructor(props) {
         super(props);
@@ -15,7 +16,12 @@ class MainApp extends React.Component {
     }
     render() {
         return (
-            <ReactGlider />
+            <ReactGlider>
+                <Item />
+                <Item />
+                <Item />
+                <div>adfadfaf</div>
+            </ReactGlider>
         )
     }
 }
