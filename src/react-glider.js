@@ -1,40 +1,61 @@
-var React = require('react');
-var _assign = function () {
-    var args = arguments;
-    var _finalObj = {};
-    for (var i = 0; i < args.length; i++) {
-        if (!!args[i] && typeof args[i] === 'object') {
-            for (var o in args[i]) {
-                if (args[i].hasOwnProperty(o)) {
-                    _finalObj[o] = args[i][o]
-                }
-            }
-        }
-    }
-    return _finalObj
-};
-var _dataset = function (ctx, dataName) {
-    if (dataName) {
-        return ctx.getAttribute('data-' + dataName)
-    } else {
-        var __data__ = {
-            length: 0
-        };
-        for (var a = 0; a < ctx.attributes.length; a++) {
-            var _t = ctx.attributes[a],
-                reg = /^data-/;
-            if (reg.test(ctx.attributes[a].nodeName)) {
-                __data__.length++;
-                __data__[_t.name.replace(reg, '')] = _t.value
-            }
-        }
-        return __data__
-    }
-};
-export class ReactGlider extends React.Component{
-    render(){
+/**
+ * Created by felix on 2016/10/17.
+ */
+import React from 'react';
+class Item extends React.Component {
+    render() {
         return (
-            <div>ReactGlider</div>
+            <div className = "RGItem">item</div>
         )
     }
 }
+class ReactGlider extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            id: this.props.id,
+            style: this.props.style
+        }
+    }
+
+    componentWillMount() {
+    }
+
+    pageUp() {
+    }
+
+    pageDown() {
+
+    }
+
+    componentDidMount() {
+        const wrap = this.refs.wrap;
+        console.log('wrap', wrap.children, typeof wrap.children);
+        for (let i = 0; i < wrap.children.length; i++) {
+            if (wrap.children[i].className == 'RGItem') {
+                console.log(wrap.children[i])
+            }
+        }
+    }
+
+    render() {
+        const mainWrapStyle = {
+            height: '100%',
+            width: '100%'
+        };
+        return (
+            <div
+                id = {this.state.id}
+                style = {mainWrapStyle}
+            >
+                <div
+                    ref = 'wrap'
+                >
+                    {this.props.children}
+                </div>
+            </div>
+        )
+    }
+}
+ReactGlider.Item = Item;
+export default ReactGlider
