@@ -30,6 +30,14 @@ class MainApp extends React.Component {
         }
     }
 
+    finishTurn(a, b) {
+        console.log('finishTurn', a, b)
+    }
+
+    beforeTurn(a, b) {
+        console.log('beforeTurn', a, b)
+    }
+
     render() {
         const commonStyle = {
             width: '100%',
@@ -41,6 +49,9 @@ class MainApp extends React.Component {
                     id = 'test'
                     width = {this.state.width}
                     height = {this.state.height}
+                    during = {.5}
+                    finishTurn = {this.finishTurn.bind(this)}
+                    beforeTurn = {this.beforeTurn.bind(this)}
                 >
                     <Item>
                         <div
@@ -48,7 +59,8 @@ class MainApp extends React.Component {
                                 ...commonStyle,
                                 backgroundColor: '#eee'
                             }}
-                        >1</div>
+                        >1
+                        </div>
                     </Item>
                     <Item>
                         <div
@@ -56,7 +68,8 @@ class MainApp extends React.Component {
                                 ...commonStyle,
                                 backgroundColor: '#ddd'
                             }}
-                        >2</div>
+                        >2
+                        </div>
                     </Item>
                     <Item>
                         <div
@@ -64,7 +77,8 @@ class MainApp extends React.Component {
                                 ...commonStyle,
                                 backgroundColor: '#ccc'
                             }}
-                        >3</div>
+                        >3
+                        </div>
                     </Item>
                     <div>adfadfaf</div>
                 </ReactGlider>
