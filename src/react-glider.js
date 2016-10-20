@@ -70,13 +70,15 @@ class ReactGlider extends React.Component {
             id: this.props.id,
             style: this.props.style,
             height: this.props.height || 0,
-            width: this.props.width,
-            active: 0,
+            width: this.props.width || 0,
+            sideDis: this.props.sideDis || '10px',
             defaultActive: this.props.defaultActive || 0,
             length: 0,
             during: this.props.during || 0.5,
             showIndexIco: this.props.showIndexIco !== false,
-            type: this.props.type !== 'x' ? 'y' : 'x'
+            indexDir: this.props.indexDir,
+            active: 0,
+            type: this.props.type !== 'x' ? 'y' : 'x',
         }
     }
 
@@ -85,7 +87,8 @@ class ReactGlider extends React.Component {
 
     componentWillReceiveProps(nextProp) {
         this.setState({
-            height: nextProp.height
+            height: nextProp.height || 0,
+            width: nextProp.width || 0,
         }, function () {
             this.onResize()
         })
@@ -129,67 +132,97 @@ class ReactGlider extends React.Component {
 
     onResize() {
         const items = this.refs.items,
+            children = items.children,
             wrap = this.refs.wrap,
             type = this.state.type,
             itemW = this.state.width,
             itemH = this.state.height;
-        console.log('type',type)
-        if(type === 'y'){
-            wrap.style.height = itemH + 'px';
-            for (let i = 0; i < items.children.length; i++) {
-                const _item = items.children[i];
-                if (_item.className !== 'RGItem') {
-                    items.removeChild(_item)
-                } else {
-                    _item.style.height = itemH + 'px';
+        let len = children.length;
+
+        wrap.style.height = itemH + 'px';
+        wrap.style.width = itemW + 'px';
+
+        for (let i = 0; i < len; i++) {
+            const _item = children[i];
+            if (_item.className !== 'RGItem') {
+                items.removeChild(_item);
+                len--
+            } else {
+                _item.style.height = itemH + 'px';
+                _item.style.width = itemW + 'px';
+                if (type === 'x') {
+                    items.style.width = itemW * len + 'px';
+                    items.style.overflow = 'hidden';
+                    _item.style.float = 'left';
                 }
             }
-        }else{
-
         }
         this.setState({
-            length: items.children.length
+            length: len
         })
     }
 
     renderIndexIco() {
         const len = this.state.length,
             active = this.state.active,
+            dist = this.state.sideDis,
             type = this.state.type,
-            marginBack = (len * 20 + 20) / (-2);
+            dir = this.state.indexDir,
+            marginBack = (len * 20 + 20) / (-2) + 'px';
         if (len > 0) {
-            const icoStyle = {
+            const itemIco = {
+                    display: 'block',
+                    width: '20px',
+                    padding: '5px 0',
+                    lineHeight: '20px',
+                    textAlign: 'center',
+                    cursor: 'pointer',
+                    float: 'left'
+                },
+                icoStyle = {
                     borderRadius: '50%',
                     width: '10px',
                     height: '10px',
                     display: 'block',
-                    margin: '10px 0 ',
-                    cursor: 'pointer'
+                    margin: '0 auto'
                 },
                 wrapStyle = {
                     position: 'absolute',
                     zIndex: 11,
-                    padding: '5px 10px',
                     borderRadius: '20px',
-                    backgroundColor: 'rgba(0,0,0,0.5)',
+                    backgroundColor: 'rgba(0,0,0,0.3)',
+                    overflow: 'hidden'
                 },
-                wrapStyleY = {
-                    right: '10px',
-                    top: '50%',
-                    marginTop: marginBack,
-                },
-                wrapStyleX = {
-                    transform: 'rotate(-90deg)',
-                    bottom: '10px',
-                    left: '50%',
-                    marginLeft: marginBack,
-                };
+                dirStyle = (() => {
+                    let _style = {},
+                        _sX = (d) => {
+                            _style[d] = dist;
+                            _style.left = '50%';
+                            _style.padding = '0 10px';
+                            _style.marginLeft = marginBack;
+                        },
+                        _sY = (d) => {
+                            _style[d] = dist;
+                            _style.top = '50%';
+                            _style.padding = '10px 0';
+                            _style.width = '20px';
+                            _style.marginTop = marginBack;
+                        };
+                    if (dir === 'top' || dir === 'bottom') {
+                        _sX(dir)
+                    } else if (dir === 'left' || dir === 'right') {
+                        _sY(dir)
+                    } else {
+                        if (type === 'x') {
+                            _sX('bottom')
+                        } else {
+                            _sY('right')
+                        }
+                    }
+                    return _style
+                })();
             let finalStyle;
-            if (type === 'y') {
-                finalStyle = _assign(wrapStyle, wrapStyleY);
-            } else {
-                finalStyle = _assign(wrapStyle, wrapStyleX)
-            }
+            finalStyle = _assign(wrapStyle, dirStyle);
             const icos = [];
             let on = false;
             for (let i = 0; i < len; i++) {
@@ -204,12 +237,16 @@ class ReactGlider extends React.Component {
                 let ico = (<span
                     className = {on ? 'on' : ''}
                     key = {`indexIco${i}`}
-                    style = {{
-                        ...icoStyle,
-                        backgroundColor: bgc
-                    }}
                     onClick = {this.goto.bind(this, i)}
-                />);
+                    style = {itemIco}
+                >
+                    <i
+                        style = {{
+                            ...icoStyle,
+                            backgroundColor: bgc
+                        }}
+                    />
+                </span>);
                 icos.push(ico)
             }
             return (
@@ -234,12 +271,21 @@ class ReactGlider extends React.Component {
                 margin: '0',
                 position: 'relative'
             },
-            top = ((-1) * this.state.active) * this.state.height + 'px',
+            type = this.state.type,
+            active = this.state.active,
+            height = this.state.height,
+            width = this.state.width,
+            top = ((-1) * active) * height + 'px',
+            left = ((-1) * active) * width + 'px',
             itemsStyle = {
                 transition: this.state.during + 's',
-                position: 'relative',
-                top: top
+                position: 'relative'
             };
+        if (type === 'x') {
+            itemsStyle.left = left
+        } else {
+            itemsStyle.top = top
+        }
         let indexIco = null;
         if (this.state.showIndexIco) {
             indexIco = this.renderIndexIco()

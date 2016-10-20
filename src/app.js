@@ -1,7 +1,6 @@
 /**
- * Created by zhaoxk on 2016/10/12.
+ * Created by zhaoxk on 2016/10/17.
  */
-//require('core-js');
 import React from 'react';
 import ReactDOM from 'react-dom';
 //import ReactGlider from 'react-glider'
@@ -30,12 +29,12 @@ class MainApp extends React.Component {
         }
     }
 
-    finishTurn(a, b) {
-        console.log('finishTurn', a, b)
+    finishTurn(from, to) {
+        console.log('finishTurn', from, to)
     }
 
-    beforeTurn(a, b) {
-        console.log('beforeTurn', a, b)
+    beforeTurn(from, to) {
+        console.log('beforeTurn', from, to)
     }
 
     render() {
@@ -50,6 +49,9 @@ class MainApp extends React.Component {
                     width = {this.state.width}
                     height = {this.state.height}
                     during = {.5}
+                    type = 'y'
+                    indexDir = 'top'
+                    sideDis = '30px'
                     finishTurn = {this.finishTurn.bind(this)}
                     beforeTurn = {this.beforeTurn.bind(this)}
                 >
